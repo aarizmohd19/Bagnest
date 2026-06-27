@@ -10,7 +10,7 @@ module.exports.registerUser = async (req,res)=>{
 
         let existingUser = await userModel.findOne({email});
          if(existingUser) {
-             return res.status(400).send("You already have an Account ,Please login");
+             return req.flash("error","You already have an Account ,Please login");
         }
 
         bcrypt.genSalt(10,function (err,salt) {
@@ -25,7 +25,7 @@ module.exports.registerUser = async (req,res)=>{
             
                 let token = generateToken(user);
                 res.cookie("token",token);
-                res.send("User Created")
+                res.redirect("/shop");
                 }
             })
         })
@@ -37,20 +37,34 @@ module.exports.registerUser = async (req,res)=>{
 }
 
 module.exports.loginUser = async (req,res) => {
-    let {email,password} = req.body;
-
-    let user = await userModel.findOne({email});
-    if(!user)
-        return res.status(401).send("Email or Password is incorrect")
-
-
-    bcrypt.compare(password,user.password,function (err,result) {
-        if(result){
+    try {
+        let {email,password} = req.body;
+        
+        let user = await userModel.findOne({email});
+        if(!user){
+            req.flash("error","Email or Password is  incorrect");
+            return res.redirect("/");
+        }
+        
+        
+        bcrypt.compare(password,user.password,function (err,result) {
+            if(result){
             let token = generateToken(user);
             res.cookie("token",token);
-            res.send("You can login")
+            res.redirect("/shop");
         } else {
-            res.status(406).send("Email or Password is  incorrect")
+            req.flash("error","Email or Password is  incorrect");
+            return res.redirect("/")
+            
         }
     })
+    }
+    catch (err) {
+        res.send(err.message);
+    }
+} 
+
+module.exports.logout= (req,res) => {
+    res.cookie("token","");
+    res.redirect("/")
 }
