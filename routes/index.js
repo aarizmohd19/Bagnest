@@ -9,6 +9,12 @@ router.get('/', (req,res) => {
     res.render("index",{error});
 });
 
+
+router.get('/profile',isLoggedIn, async (req,res) => {
+    let user = await userModel.findOne({email:req.user.email}).populate("cart");
+    res.render("profile",{user});
+});
+
 router.get('/shop',isLoggedIn, async (req,res) => {
     let products = await productModel.find();
     let success = req.flash("success");
