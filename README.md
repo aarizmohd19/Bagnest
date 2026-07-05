@@ -9,6 +9,9 @@ BagNest is a full-stack e-commerce web application for shopping different types 
 - Admin can create a product
 - Product Listing
 - Adding product in cart
+- Order Listing
+- User profile
+- Track products
 - MongoDB Database Integration
 - Dynamic UI using EJS
 - Responsive Design with Tailwind CSS
@@ -22,3 +25,4 @@ BagNest is a full-stack e-commerce web application for shopping different types 
 - Tailwind CSS
 - JWT
 - bcrypt
+- Javascript
